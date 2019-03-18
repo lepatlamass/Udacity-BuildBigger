@@ -44,15 +44,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        MyCoolJokes myCoolJokes = new MyCoolJokes();
-
-        String randromJoke = myCoolJokes.getJoke();
-
-        Intent i = new Intent(this, JokesActivity.class);
-        i.putExtra("jokes",randromJoke);
-        startActivity(i);
-
-
         EndpointsAsyncTask endpointsAsyncTask = new EndpointsAsyncTask();
         endpointsAsyncTask.execute(this);
     }
