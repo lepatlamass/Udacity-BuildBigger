@@ -20,6 +20,7 @@ import java.io.IOException;
 class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
     public static MyApi myApiService = null;
+    private OnRetrieveJokeListener listener;
     private Context context;
     String text;
 
@@ -52,6 +53,11 @@ class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
         }
 
     }
+    
+    // method to create instance of EndpointsAsyncTask
+    public static void getInstance(OnRetrieveJokeListener listener) {
+        new EndpointsAsyncTask(listener).execute();
+}
 
     @Override
     protected void onPostExecute(String result) {
