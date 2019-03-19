@@ -4,7 +4,7 @@ package com.udacity.gradle.builditbigger;
 
 import android.support.annotation.Nullable;
 
-import com.udacity.gradle.builditbigger.JokeAsyncTask;
+import com.udacity.gradle.builditbigger.EndpointsAsyncTask;
 import com.udacity.gradle.builditbigger.OnRetrieveJokeListener;
 
 import org.junit.Test;
@@ -29,7 +29,7 @@ class EndpointsAsyncTaskTest implements OnRetrieveJokeListener {
     public void EndpointsAsyncTaskTest() {
         try {
             latch = new CountDownLatch(1);
-            EndpointsAsyncTaskTest.getInstance(this);
+            EndpointsAsyncTask.getInstance(this);
             latch.await(15, TimeUnit.SECONDS);
             // assert that joke is not empty
             assertFalse("Empty joke string", testJoke.isEmpty());
