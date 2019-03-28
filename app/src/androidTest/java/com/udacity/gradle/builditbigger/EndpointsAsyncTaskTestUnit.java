@@ -40,8 +40,6 @@ public class EndpointsAsyncTaskTestUnit extends AndroidTestCase {
 
     @Test
     public void testVerifyResponse() {
-
-
         onView(withId(R.id.button)).perform(click());
         onView(withId(R.id.jokes_text_view)).check(matches(isDisplayed()));
     }
