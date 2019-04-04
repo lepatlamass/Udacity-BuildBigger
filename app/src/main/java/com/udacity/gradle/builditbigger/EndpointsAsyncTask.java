@@ -19,9 +19,25 @@ import java.io.IOException;
  */
 class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
+    private static final String TAG = EndpointsAsyncTask.class.getSimpleName();
     public static MyApi myApiService = null;
     private Context context;
-    String text;
+
+    private OnRetriveJokeListiner listener;
+
+    private  EndpointsAsyncTask(OnRetriveJokeListiner mListener) {
+        listener = mListener;
+    }
+
+    public static void getInstance(OnRetriveJokeListiner listener) {
+        new EndpointsAsyncTask(listener).execute();
+    }
+
+    @Override
+    protected  void onPreExecute() {
+        super.onPreExecute();
+        listener.OnRetrieveStarted();
+    }
 
     @Override
     protected String doInBackground(Context... params) {
@@ -43,7 +59,6 @@ class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
             myApiService = builder.build();
         }
 
-        context = params[0];
 
         try {
             return myApiService.getRandomJokeService().execute().getData();
@@ -56,9 +71,7 @@ class EndpointsAsyncTask extends AsyncTask<Context, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        final Intent intent = new Intent(context, JokesActivity.class);
-        intent.putExtra("gce_result",result);
-        context.startActivity(intent);
+        listener.OnRetrieveFinished(result);
     }
 
 

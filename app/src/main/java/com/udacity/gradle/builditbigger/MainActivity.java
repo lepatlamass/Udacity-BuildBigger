@@ -2,6 +2,8 @@ package com.udacity.gradle.builditbigger;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +15,8 @@ import com.movieapp.konwo.library.JokesActivity;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private ContentLoadingProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +47,27 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void tellJoke(View view) {
-        EndpointsAsyncTask endpointsAsyncTask = new EndpointsAsyncTask();
-        endpointsAsyncTask.execute(this);
+    //retrieve joke from endpoint
+    private void tellJoke() {
+        EndpointsAsyncTask.getInstance(new OnRetriveJokeListiner() {
+            @Override
+            public void OnRetrieveStarted() {
+                mProgressBar.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void OnRetrieveFinished(@Nullable String result) {
+                mProgressBar.setVisibility(View.GONE);
+
+            }
+        });
     }
 
+    //launch joke endponts
+    private void startJoke(String joke) {
+        Intent intent = new Intent(this, JokesActivity.class);
+        intent.putExtra(JokesActivity.JOKE_KEY, joke);
+        startActivity(intent);
+    }
 
 }

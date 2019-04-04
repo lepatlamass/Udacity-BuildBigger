@@ -2,12 +2,17 @@ package com.movieapp.konwo.library;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.Objects;
 
 
 /**
@@ -21,21 +26,22 @@ public class JokesActivityFragment extends Fragment {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_jokes_activity, container, false);
-        Intent i = getActivity().getIntent();
+        View root = inflater.inflate(R.layout.fragment_jokes_activity, container, false);
+        Intent intent = Objects.requireNonNull(getActivity()).getIntent();
 
 
         // Inflate the layout for this fragment
-        String gce_result = getActivity().getIntent().getStringExtra("gce_result");
-        TextView gce_result_show = v.findViewById(R.id.jokes_text_view);
-        gce_result_show.setText(gce_result);
+        String joke = intent.getStringExtra(JokesActivity.JOKE_KEY);
+        TextView gce_result_show = root.findViewById(R.id.jokes_text_view);
+        gce_result_show.setText(joke);
 
-        return v;
+        return root;
     }
 
 }

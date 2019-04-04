@@ -1,46 +1,43 @@
 package com.udacity.gradle.builditbigger;
 
-import android.support.test.InstrumentationRegistry;
-import android.support.test.filters.LargeTest;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+import android.support.annotation.Nullable;
 
 
-import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-
-@RunWith(AndroidJUnit4.class)
-@LargeTest
-
-public class EndpointsAsyncTaskTestUnit extends AndroidTestCase {
-    String TAG = EndpointsAsyncTask.class.getSimpleName();
-    @Rule
-    public ActivityTestRule<MainActivity> mActivityRule =
-            new ActivityTestRule(MainActivity.class);
+import static junit.framework.TestCase.assertFalse;
+import static junit.framework.TestCase.fail;
 
 
-    @Test
-    public void testJokeIsNotEmpty() throws Exception {
+public class EndpointsAsyncTaskTestUnit implements OnRetriveJokeListiner {
 
-        EndpointsAsyncTaskTest aTest =  new EndpointsAsyncTaskTest();
-        aTest.execute(InstrumentationRegistry.getContext());
-        String joke = aTest.get(5, TimeUnit.SECONDS);
-        Assert.assertTrue(!joke.equals(""));
+    private String testJoke = null;
+    private CountDownLatch latch;
+
+
+    @Override
+    public void OnRetrieveStarted() {
+
     }
 
     @Test
-    public void testVerifyResponse() {
-        onView(withId(R.id.button)).perform(click());
-        onView(withId(R.id.jokes_text_view)).check(matches(isDisplayed()));
+    public void AsyncTaskTest() {
+        try {
+            latch = new CountDownLatch(1);
+            EndpointsAsyncTask.getInstance(this);
+            latch.await(15, TimeUnit.SECONDS);
+            assertFalse("Empty joke string", testJoke.isEmpty());
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    @Override
+    public void OnRetrieveFinished(@Nullable String result) {
+        testJoke = result;
+        latch.countDown();
     }
 }
